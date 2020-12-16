@@ -1,0 +1,19 @@
+{
+  "name": "cli-fullstack",
+  "version": "1.0.0",
+  "description": "A CLI command to setup a Full-Stack app",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "child_process": "^1.0.2",
+    "express": "^4.17.1",
+    "inquirer": "^7.3.3",
+    "node-emoji": "^1.10.0"
+  }
+}
