@@ -4,6 +4,21 @@ var process = require("process");
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 const emoji = require("node-emoji");
+const fs = require('fs')
+
+let serverCode = `const express = require ("express")
+const app = express()
+
+const port = 3000 || process.env.port
+
+app.get("/",(req,res)=>{
+    res.send("<h1>Server Working</h1>")
+})
+
+app.listen(port,()=>{
+    console.log("Server running at "+ port)
+})`
+
 
 inquirer
   .prompt([
@@ -17,6 +32,16 @@ inquirer
     let path = "";
     if (answers.directory) path = answers.directory;
     else path = "./";
+    let name = ""
+    
+    inquirer.prompt([{
+      type: "input",
+      message: "Enter name of the project",
+      name: "name"
+    }]).then(answers=>{
+      if (answers.name) name=answers.name
+      else name = "cli-fullstack"
+
     inquirer
       .prompt([
         {
@@ -38,7 +63,7 @@ inquirer
           .then((answers) => {
             if (answers.confirmation) {
               exec(
-                `mkdir ${path}/test-fullstack`,
+                `mkdir ${path}/${name}`,
                 async (err, stdout, stderr) => {
                   if (stderr) {
                     console.log();
@@ -47,15 +72,22 @@ inquirer
                     console.log("Error: ", stderr);
                     return;
                   }
-                  process.chdir(`${path}/test-fullstack`);
+                  process.chdir(`${path}/${name}`);
                   exec("mkdir Frontend");
                   exec("mkdir Backend");
                   exec("npm init -y");
-                  var child = exec("npm install express " + dependencies);
+                  exec("touch ./Backend/server.js")
+                  fs.writeFile("./Backend/server.js",serverCode,(err)=>{
+                    if (err) console.log(chalk.red("Server Code Writing Unsuccessful"))
+                    return
+                  })
+                  var child = exec("npm install express " + dependencies);      
                   child.on("exit", () => {
                     console.clear();
-                    console.log("Goto: " + path + "/test-fullstack");
-                    console.log(chalk.blue("Happy Working!"));
+                    console.log()
+                    console.log("Code : "+path+"test-fullstack")        
+                    console.log(chalk.blue("Happy Coding!"));
+                    console.log()
                     console.log(emoji.emojify("Made by Siddhant :smile:"));
                     console.log(
                       emoji.emojify(
@@ -72,4 +104,5 @@ inquirer
             }
           });
       });
+    })
   });
